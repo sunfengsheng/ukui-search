@@ -2,6 +2,7 @@
 #include "mainrunner.h"
 #include "pinyin.h"
 #include "filtermodel.h"
+#include "settingmodel.h"
 
 mainrunner::mainrunner(QWidget *parent)
 
@@ -13,6 +14,7 @@ mainrunner::mainrunner(QWidget *parent)
     search1 = QString::fromLocal8Bit("");
 
     RunnerModel *runnerModel = new RunnerModel(this);
+    settingModel *settingmodel= new settingModel;
     m_pMainVLayout = new QVBoxLayout(this);//搜索总布局
     m_pMainVLayout->setContentsMargins(0, 0, 0, 0);
     m_pMainVLayout->setSpacing(0);
@@ -25,11 +27,6 @@ mainrunner::mainrunner(QWidget *parent)
     input->addAction(searchAction,QLineEdit::LeadingPosition);
     input->setStyleSheet(QString::fromLocal8Bit("QLineEdit { background-color : white; border:1px solid rgb(0, 0, 222);border-radius: 10px;}"));
 
-//   //设置控制面板模块搜索栏
-//    m_searchWidget =new SearchWidget(this);
-//    m_searchWidget->addModulesName(QString::fromLocal8Bit("update"),QString::fromLocal8Bit("更新"),QString::fromLocal8Bit("/home/li/ukui/ukui-runner/ukui-runner/tests/zh_CN.ts"));
-//    m_searchWidget->setLanguage(QString::fromLocal8Bit("1"));
-
     connect(input, &QLineEdit::textChanged, runnerModel, &RunnerModel::scheduleQuery); //监听输入框输入的信息
 
     //初始化搜索载体
@@ -39,11 +36,8 @@ mainrunner::mainrunner(QWidget *parent)
     Search_web_pages = new QPushButton();//网页搜索QPushButton
     Search_web_pages->setText(QString::fromLocal8Bit("网页搜索"));
 
-
-
     connect(input, &QLineEdit::textChanged, Search_web_pages,[=](){
         QString search=QString::fromLocal8Bit("使用百度搜索").append(QString::fromLocal8Bit(" ")).append(QString::fromLocal8Bit("\"")).append(input->text()).append(QString::fromLocal8Bit("\""));
-//        QString search = QString::fromLocal8Bit(QString("使用百度搜索 1%2%3%").arg(QString::fromLocal8Bit("")).arg(input->text().arg(QString::fromLocal8Bit(""))));
         Search_web_pages->setText(search);
         search1=input->text();
         //根据判断来隐藏与显示网页搜索
@@ -59,40 +53,6 @@ mainrunner::mainrunner(QWidget *parent)
     setView->setStyleSheet(QString::fromLocal8Bit("QTreeView { background-color : white; border: 0px none;border-radius: 10px;}")) ;
     Search_web_pages->setStyleSheet(QString::fromLocal8Bit("text-align:left"));
 
-
-
-//    sliderP1->setStyleSheet(
-
-//                "QSlider::groove:Vertical {"
-//                 "border: 0px none;"
-//                 "background: #F5F5F5;"
-//                 "height: 222px;"
-//                 "width: 32px;"
-//                 "border-radius: 5px;"
-//                 "}"
-
-//                 "QSlider::handle:Vertical {"
-//                 "background: #00BFFF;"
-//                 "border: 0px none;"
-//                 "width: 50px;"
-//                 "height: 15px;"
-//                 "border-radius: 5px;"
-//                 "margin: 0px 0;"
-//                 "border-image:url(:/image/abcd.png);"
-//                 "}"
-
-//                 "QSlider::add-page:Vertical {"
-//                 "background: #00BFFF;"
-//                 "border-radius: 5px;"
-//                 "}"
-
-//                 "QSlider::sub-page:horizontal {"
-//                 "background: #DD4814;"
-//                 "border-radius: 5px;"
-//                 "}"
-
-//             );
-
     //添加搜索依据内容
     filefiltermodel *mFileModel = new filefiltermodel;
     mFileModel->setSourceModel(runnerModel);
@@ -102,20 +62,16 @@ mainrunner::mainrunner(QWidget *parent)
     mAppModel->setSourceModel(runnerModel);
     appView->setModel(mAppModel);
 
-    model = new QStandardItemModel();
-    setView->setModel(model);
+    //model = new QStandardItemModel();
+    setView->setModel(settingmodel);
 
     //搜索控制面板设置
     mqsetting =new QSettings(QString::fromLocal8Bit("/home/li/Desktop/search.conf"),QSettings::IniFormat);
     mqsetting->setIniCodec(QTextCodec::codecForName("UTF-8")); //在此添加设置，即可读写ini文件中的中文
 
-    connect(input, &QLineEdit::textChanged,[=](){
-          listenchange();
-
-          qDebug()<< mFileModel->index(0,0);
-
-    }); //监听输入框输入的信息并把信息发送给系统设置界面
-
+/*    connect(input, &QLineEdit::textChanged,[=](){
+         listenchange();
+    });*/ //监听输入框输入的信息并把信息发送给系统设置界面
 
     //整体布局
     m_pMainVLayout->addWidget(input);
@@ -127,14 +83,11 @@ mainrunner::mainrunner(QWidget *parent)
     m_pMainVLayout->addWidget(setView);
     m_pMainVLayout->addItem(new QSpacerItem(20, 10));
     m_pMainVLayout->addWidget(Search_web_pages);
-//    m_pMainVLayout->addWidget(m_searchWidget);
-
 
 //    fileView->setVisible(false);
 //    appView->setVisible(false);
-    setView->setVisible(false);
-    Search_web_pages->setVisible(false);
-
+//    setView->setVisible(false);
+//    Search_web_pages->setVisible(false);
 
     setWindowFlags(Qt::FramelessWindowHint);//无边框
     setAttribute(Qt::WA_TranslucentBackground);//背景透明
@@ -149,12 +102,19 @@ mainrunner::mainrunner(QWidget *parent)
         runnerModel->run(mFileModel->mapToSource(fileView->currentIndex()).row());
     });
 
-    connect(setView,&QTreeView::clicked,this,[=](){
-        QProcess p;
-        p.setProgram(search_command.at(setView->currentIndex().row()));
-        p.startDetached(p.program());
-        p.waitForFinished(-1);
+    connect(input,&QLineEdit::textChanged,settingmodel,[=](const QString &search){
+                settingmodel->matchstart(search);
+    });
 
+//    connect(setView,&QTreeView::clicked,this,[=](){
+//        QProcess p;
+//        p.setProgram(search_command.at(setView->currentIndex().row()));
+//        p.startDetached(p.program());
+//        p.waitForFinished(-1);
+//    });
+
+    connect(setView,&QTreeView::clicked,this,[=](){
+        settingmodel->run(setView->currentIndex().row());
     });
 
     connect(Search_web_pages,&QPushButton::clicked,this,[=](){
@@ -165,10 +125,6 @@ mainrunner::mainrunner(QWidget *parent)
         p.startDetached(p.program(), p.arguments());
         p.waitForFinished(-1);
     });
-
-//    qDebug()<<desktop->width() - this->width()/2<<  (desktop->height() - this->height())/2;
-//    this->move((desktop->width() - this->width())/2, (desktop->height() - this->height())/2);
-
 }
 
 mainrunner::~mainrunner()
@@ -185,9 +141,6 @@ void mainrunner::listenchange()
     mqsetting->beginGroup(QString::fromLocal8Bit("contol"));
     searchconter=QString::fromLocal8Bit("");
 
-//        qDebug()<<mqsetting->allKeys();
-//        qDebug()<<mqsetting->value(QString::fromLocal8Bit("kongzhizhongxin")).toString();
-
     QString inputget=Chinese2Pinyin(input->text());
     qDebug()<<inputget;
     QStringList valuenum=mqsetting->allKeys();
@@ -198,7 +151,6 @@ void mainrunner::listenchange()
              qDebug()<<"okokokok";
              searchconter=valuenum.at(i);
         }
-
     }
     //通过判断字符串是否为空，来设置model
     qDebug()<<searchconter;
@@ -214,36 +166,8 @@ void mainrunner::listenchange()
     } else {
       setView->setVisible(false);
     }
-
    mqsetting->endGroup();
-
 }
-
-void mainrunner::mousePressEvent(QMouseEvent *e)
-{
-  //鼠标左键
-  if(e->button() == Qt::LeftButton)
-  {
-  m_ptPress = e->pos();
-  qDebug() << pos() << e->pos() << m_ptPress;
-  m_bPressed = m_areaMovable.contains(m_ptPress);
-  }
-}
-
-void mainrunner::mouseMoveEvent(QMouseEvent *e)
-{
-  if(m_bPressed)
-  {
-  qDebug() << pos() << e->pos() << m_ptPress;
-  move(pos() + e->pos() - m_ptPress);
-  }
-}
-
-void mainrunner::mouseReleaseEvent(QMouseEvent *)
-{
-  m_bPressed = false;
-}
-
 
 void mainrunner::setAreaMovable(const QRect rt)
 {
@@ -253,34 +177,4 @@ void mainrunner::setAreaMovable(const QRect rt)
   }
 }
 
-
-
-//QString mainrunner::transPinyinToChinese(QString pinyin) {
-//    QString value = pinyin;
-
-//    //遍历"汉字-拼音"列表,将存在的"拼音"转换为"汉字"
-//    for (auto data : m_inputList) {
-//        if (value == data.pinyin) {
-//            value = data.chiese;
-//            break;
-//        }
-//    }
-
-//    return value;
-//}
-
-//QString mainrunner::containTxtData(QString txt) {
-//    QString value = txt;
-
-//    //遍历"汉字-拼音"列表,将存在的"拼音"转换为"汉字"
-//    for (auto data : m_inputList) {
-//        if (data.chiese.contains(txt, Qt::CaseInsensitive) ||
-//               data.pinyin.contains(txt, Qt::CaseInsensitive)) {
-//            value = data.chiese;
-//            break;
-//        }
-//    }
-
-//    return value;
-//}
 
