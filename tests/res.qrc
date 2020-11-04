@@ -7,5 +7,7 @@
     </qresource>
     <qresource prefix="/">
         <file>search.png</file>
+        <file>assets/search.conf</file>
+        <file>assets/search.xml</file>
     </qresource>
 </RCC>

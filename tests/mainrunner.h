@@ -41,7 +41,6 @@ public:
         QString pinyin;
     };
 
-
 private:
 
       QVBoxLayout  *m_pMainVLayout    = nullptr;
@@ -57,11 +56,6 @@ private:
       bool      m_bPressed;//鼠标按下标志（不分左右键）
       QPoint    m_ptPress;//鼠标按下的初始位置
 
-
-
-      void mousePressEvent(QMouseEvent *);
-      void mouseMoveEvent(QMouseEvent *);
-      void mouseReleaseEvent(QMouseEvent *);
 
       void listenchange();
 
