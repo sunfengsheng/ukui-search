@@ -1,0 +1,13 @@
+[Desktop Entry]
+Name=ukui-search
+comment=ukui-search
+Comment[zh_CN]=全局搜索
+Comment[tr_TR]=Başlangıç menüsü
+Exec=/usr/bin/ukui-search
+Terminal=false
+Type=Application
+Icon=ukui-search
+X-UKUI-AutoRestart=true
+OnlyShowIn=UKUI
+X-UKUI-Autostart-Phase=Application
+NoDisplay=true
