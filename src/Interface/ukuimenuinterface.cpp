@@ -33,6 +33,7 @@ UkuiMenuInterface::UkuiMenuInterface()
     m_blacksetting=new QSettings(blackpath,QSettings::IniFormat);
     m_blacksetting->beginGroup("application");
     m_blacklist=m_blacksetting->allKeys();
+    qDebug()<<"m_blacklist      :"<<m_blacklist;
     m_blacksetting->endGroup();
 }
 
@@ -144,10 +145,12 @@ void UkuiMenuInterface::recursiveSearchFile(const QString& _filePath)
             }
 
             char* exec=g_key_file_get_string(keyfile,"Desktop Entry","Exec", nullptr);
-            if(m_blacklist.contains(QString::fromLocal8Bit(exec))){
+            QString desktop=QString::fromLocal8Bit(exec);
+            m_blacksetting->beginGroup("application");
+            if(m_blacksetting->contains(desktop.toLocal8Bit().data())){
                 m_blackPathList.append(filePathStr);
             }
-
+            m_blacksetting->endGroup();
             filePathList.append(filePathStr);
         }
         i++;
