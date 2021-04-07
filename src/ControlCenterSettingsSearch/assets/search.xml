@@ -525,5 +525,11 @@
         <ChinesePlugin>蓝牙</ChinesePlugin>
         <ChineseFunc>添加蓝牙</ChineseFunc>
     </plugin>
+    <plugin name="Pen">
+        <pinyinPlugin>shouxiebi</pinyinPlugin>
+        <pinyinfunc>shouxiebishezhi</pinyinfunc>
+        <ChinesePlugin>手写笔</ChinesePlugin>
+        <ChineseFunc>手写笔设置</ChineseFunc>
+    </plugin>
 
 </plugins>
