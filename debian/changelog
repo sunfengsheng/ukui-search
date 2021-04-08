@@ -1,3 +1,15 @@
+ukui-search (3.0.1-1+0408) v101; urgency=medium
+
+  * fix:解决管控不全问题
+
+ -- sunfengsheng <sunfengsheng@kylinos.cn>  Thu, 08 Apr 2021 09:31:13 +0800
+
+ukui-search (3.0.1-1+0329) v101; urgency=medium
+
+  * add:增加管控功能
+
+ -- sunfengsheng <sunfengsheng@kylinos.cn> Mon, 29 Mar 2021 11:01:51 +0800
+
 ukui-search (3.0.1-1+0322) v101; urgency=medium
 
   * fix:搜索文件名含有空格的文件，搜到后点击该文件条目发现打不开文件
