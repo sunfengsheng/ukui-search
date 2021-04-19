@@ -212,6 +212,7 @@ QStringList UkuiMenuInterface::getDesktopFilePath()
     filePathList.removeAll("/usr/share/applications/kylin-io-monitor.desktop");
     filePathList.removeAll("/usr/share/applications/wps-office-uninstall.desktop");
     filePathList.removeAll("/usr/share/applications/wps-office-misc.desktop");
+    filePathList.removeAll("/usr/share/applications/wps-office-prometheus.desktop");
 
     return filePathList;
 }
