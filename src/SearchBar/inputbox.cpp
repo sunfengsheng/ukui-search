@@ -171,6 +171,7 @@ UKuiSearchLineEdit::UKuiSearchLineEdit():
     pe.setColor(QPalette::Text,Qt::lightGray);
     editLabel->setPalette(pe);
     editLabel->setFont(font);
+    editLabel->setFixedHeight(this->height()-13);
 //    editLabel->setStyleSheet("background:transparent;color:#626c6e;");
     QHBoxLayout *editLayout=new QHBoxLayout(this);
     editLayout->addSpacing(20);
