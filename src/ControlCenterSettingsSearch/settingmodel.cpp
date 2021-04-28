@@ -1,5 +1,6 @@
 #include "settingmodel.h"
 #include <src/Interface/ukuichineseletter.h>
+#include <QApplication>
 
 #define XML_Source QString::fromLocal8Bit("ChineseFunc")
 #define XML_Title  QString::fromLocal8Bit("ChinesePlugin")
@@ -62,6 +63,7 @@ void settingModel::run(int index)
         QProcess *process =new QProcess(this);
         process->startDetached("ukui-control-center");
     }
+    qApp->exit();
 }
 
 //按字段解析xml文件，将设置插件的中文提取出来

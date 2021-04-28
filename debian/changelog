@@ -1,3 +1,9 @@
+ukui-search (3.0.1-1+0428) v101; urgency=medium
+
+  * fix:打开全局搜索后，灰色提示文字“全局搜索”字样下方显示不全
+
+ -- sunfengsheng <sunfengsheng@kylinos.cn>  Mon, 26 Apr 2021 15:14:13 +0800
+
 ukui-search (3.0.1-1+0408) v101; urgency=medium
 
   * fix:解决管控不全问题
