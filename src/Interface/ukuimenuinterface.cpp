@@ -33,7 +33,6 @@ UkuiMenuInterface::UkuiMenuInterface()
     m_blacksetting=new QSettings(blackpath,QSettings::IniFormat);
     m_blacksetting->beginGroup("application");
     m_blacklist=m_blacksetting->allKeys();
-    qDebug()<<"m_blacklist      :"<<m_blacklist;
     m_blacksetting->endGroup();
 }
 
