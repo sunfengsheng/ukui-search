@@ -30,7 +30,7 @@ QVariant appModel::data(const QModelIndex &index, int role) const
     case Qt::SizeHintRole:
         return QSize(200,46);
     case Qt::FontRole:
-         return QFont("宋体",14,QFont::DemiBold);
+         return QFont("宋体",12,QFont::Medium);
 
         }
     return QVariant();
@@ -78,7 +78,7 @@ void appModel::matching(){
         pinyinName=UkuiChineseLetter::getPinyins(appName);
         shouzimuName=UkuiChineseLetter::getFirstLetters(appName);
         icon = QIcon::fromTheme(m_interFace->getAppIcon(UkuiMenuInterface::desktopfpVector.at(i)));
-        pixmap = icon.pixmap(QSize(25,25));
+        pixmap = icon.pixmap(QSize(24,24));
         if(appName.contains(sourcetext)){
             m_Showresult.append(appName);
             if(UkuiMenuInterface::blackPathList.contains(UkuiMenuInterface::desktopfpVector.at(i)))

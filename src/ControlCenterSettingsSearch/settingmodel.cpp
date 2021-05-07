@@ -44,7 +44,7 @@ QVariant settingModel::data(const QModelIndex &index, int role) const
     case Qt::SizeHintRole:
         return QSize(200,46);
     case Qt::FontRole:
-         return QFont("宋体",14,QFont::DemiBold);
+         return QFont("宋体",12,QFont::Medium);
 
         }
     return QVariant();
