@@ -1,3 +1,11 @@
+ukui-search (3.0.1-1+0528) v101; urgency=medium
+
+  *BUG号：57868
+  *需求号：无
+  *其他改动说明：修改了点击搜索应用结果更多按钮点击打开控制面板
+
+ -- sunfengsheng <sunfengsheng@kylinos.cn>  Fri, 28 May 2021 11:25:31 +0800
+
 ukui-search (3.0.1-1+0428) v101; urgency=medium
 
   * fix:打开全局搜索后，灰色提示文字“全局搜索”字样下方显示不全

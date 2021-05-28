@@ -30,7 +30,7 @@ void AppWidget::initSettingsearchUI()
 
     connect(m_Button,&MoreButton::clicked,this,[=](){
         QProcess *process =new QProcess(this);
-        process->startDetached("ukui-control-center");
+        process->startDetached("ubuntu-kylin-software-center");
     });
 
     //监听点击事件，打开对应的设置选项
