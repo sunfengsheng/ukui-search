@@ -90,6 +90,19 @@ UkuiSearchBarHLayout::~UkuiSearchBarHLayout()
 
 }
 
+bool UkuiSearchBarHLayout::event(QEvent *event){
+    if(event->type()==QEvent::KeyRelease){
+        QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+        if(keyEvent->key()==Qt::Key_Backspace){
+            m_queryLineEdit->backspace();
+            return true;
+        }
+        m_queryLineEdit->insert(keyEvent->text());
+    }
+    QHBoxLayout::event(event);
+    return true;
+}
+
 /**
  * @brief 初始化ui
  */

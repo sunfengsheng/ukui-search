@@ -83,3 +83,24 @@ void settingview::styleChange()
                     );
     }
 }
+
+void settingview::keyPressEvent(QKeyEvent *event){
+    if(event->text()=="\r"){
+        Q_EMIT open();
+    }
+    if(event->key()==Qt::Key_Down){
+        int row = this->currentIndex().row();
+        if(row==2){
+            Q_EMIT viewSwitchDown();
+        }
+    }
+
+    if(this->currentIndex().row()==0){
+        if(event->key()==Qt::Key_Up){
+            this->clearSelection();
+            Q_EMIT viewSwitchUp();
+        }
+    }
+
+    QTreeView::keyPressEvent(event);
+}

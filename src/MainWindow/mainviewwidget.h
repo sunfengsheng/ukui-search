@@ -101,6 +101,7 @@ protected:
      * @brief Add a top window control
      */
     void addTopControl();
+    bool event(QEvent *event);
 
 Q_SIGNALS:
     /**

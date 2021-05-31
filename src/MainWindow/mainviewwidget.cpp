@@ -113,6 +113,45 @@ void MainViewWidget::initSearchWidget()
         if(m_appView->isHidden())
             m_settingview->fristSelect();
     });
+    connect(m_fileview,&SearchFileWidget::viewSwitchDown,m_appView,[=](){
+        if(m_appView->isVisible()){
+            m_appView->fristSelect();
+        }else{
+            m_settingview->fristSelect();
+        }
+    });
+
+    connect(m_appView,&AppWidget::viewSwitchUp,m_fileview,[=](){
+        m_fileview->selectLastRow();
+    });
+
+    connect(m_appView,&AppWidget::viewSwitchDown,m_settingview,[=](){
+        m_settingview->fristSelect();
+    });
+
+    connect(m_settingview,&SettingWidget::viewSwitchUp,m_appView,[=](){
+        if(m_appView->isVisible()){
+            m_appView->m_Button->setFocus();
+        }else{
+            m_fileview->selectLastRow();
+        }
+    });
+    connect(m_settingview,&SettingWidget::viewSwitchUp,m_appView,[=](){
+        if(m_appView->isVisible()){
+            m_appView->selectLastRow();
+        }else{
+            m_fileview->selectLastRow();
+        }
+    });
+     connect(search_web_page->web,&websearch::viewSwitchUp,m_appView,[=](){
+        if(m_settingview->isVisible()){
+            m_settingview->selectLastRow();
+        }else if(m_appView->isVisible()){
+            m_appView->selectLastRow();
+        }else{
+            m_fileview->selectLastRow();
+        }
+     });
 }
 
 /**
@@ -135,6 +174,20 @@ void MainViewWidget::AddSearchWidget()
     mainLayout->addItem(new QSpacerItem(10,5));
     mainLayout->addWidget(search_web_page);
     mainLayout->addStretch();
+}
+
+bool MainViewWidget::event(QEvent *event){
+    if(event->type()==QEvent::KeyRelease){
+        QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+        if(!((keyEvent->key()==Qt::Key_Down)||(keyEvent->key()==Qt::Key_Up))){
+            if(!m_topLayout->m_queryLineEdit->hasFocus()){
+                m_topLayout->m_queryLineEdit->setFocus();
+                QApplication::sendEvent(m_topLayout,keyEvent);
+            }
+        }
+    }
+    QWidget::event(event);
+    return true;
 }
 
 void MainViewWidget::searchContent(QString searchcontent){

@@ -83,3 +83,35 @@ void appview::styleChange()
                     );
     }
 }
+
+void appview::keyPressEvent(QKeyEvent *event){
+    if(event->text()=="\r"){
+        Q_EMIT open();
+    }
+
+    if(event->key()==Qt::Key_Down){
+        int row = this->currentIndex().row();
+        if(row==2){
+            this->clearSelection();
+            Q_EMIT viewSwitchDown();
+            return;
+        }
+        if(row==0){
+            if(!this->indexBelow(this->currentIndex()).isValid()){
+                Q_EMIT viewNoMoreSwitchDown();
+            }
+        }else if(row==1){
+            if(!this->indexBelow(this->currentIndex()).isValid()){
+                Q_EMIT viewNoMoreSwitchDown();
+            }
+        }
+    }
+    if(this->currentIndex().row()==0){
+        if(event->key()==Qt::Key_Up){
+            this->clearSelection();
+            Q_EMIT viewSwitchUp();
+        }
+    }
+
+    QTreeView::keyPressEvent(event);
+}

@@ -5,7 +5,7 @@
 webwidget::webwidget(){
     this->setVisible(false);
     this->setFixedHeight(55);
-    websearch *web=new websearch(this);
+    web=new websearch(this);
     QHBoxLayout *buttonLayout=new QHBoxLayout(this);
     buttonLayout->addWidget(web);
     QDBusConnection::sessionBus().connect(QString(), QString("/lineEdit/textChanged"), "org.ukui.search.inputbox", "InputBoxTextChanged", this,SLOT(webSearchTextRefresh(QString)));
@@ -91,3 +91,11 @@ void websearch::webSearchTextRefresh(QString mSearchText)
 
 }
 
+void websearch::keyPressEvent(QKeyEvent *event){
+    if(event->key()==Qt::Key_Down){
+        return;
+    }
+    if(event->key()==Qt::Key_Up){
+        Q_EMIT viewSwitchUp();
+    }
+}

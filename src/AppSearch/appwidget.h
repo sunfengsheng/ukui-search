@@ -22,14 +22,18 @@ public:
      appview *settingView;
      appModel *m_settingmodel;//设置model
      QVBoxLayout *m_listLayout;
+     MoreButton *m_Button;
+
+public:
+     void selectLastRow();
 
 private:
      void initSettingsearchUI();
      void paintEvent(QPaintEvent *e);
      bool eventFilter(QObject *watched, QEvent *event);
+     QModelIndex lastVisibleItem(appview *view, const QModelIndex &index = QModelIndex());
 
 private:
-     MoreButton *m_Button;
      HeadLabel *m_Headlabel;
 
 private Q_SLOTS:
@@ -41,6 +45,8 @@ public Q_SLOTS:
 
 Q_SIGNALS:
 //     void sendSearchKeyword(QString arg);
+     void viewSwitchDown();
+     void viewSwitchUp();
 
 
 };

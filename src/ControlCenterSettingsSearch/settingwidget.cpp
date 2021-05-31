@@ -33,9 +33,35 @@ void SettingWidget::initSettingsearchUI()
         process->startDetached("ukui-control-center");
     });
 
+    connect(m_Button,&MoreButton::open,this,[=](){
+        QProcess *process =new QProcess(this);
+        process->startDetached("ukui-control-center");
+    });
+
+    connect(m_Button,&MoreButton::switchUpModule,this,[=](){
+        settingView->setCurrentIndex(m_settingmodel->index(2,0,m_settingmodel->index(0,0,m_settingmodel->index(0))));
+    });
+
+    connect(m_Button,&MoreButton::switchDownModule,this,[=](){
+        Q_EMIT viewSwitchDown();
+    });
+
     //监听点击事件，打开对应的设置选项
     connect(settingView,&QTreeView::clicked,this,[=](){
         m_settingmodel->run(settingView->currentIndex().row());
+    });
+
+    connect(settingView,&settingview::open,this,[=](){
+        m_settingmodel->run(settingView->currentIndex().row());
+    });
+
+    connect(settingView,&settingview::viewSwitchUp,this,[=](){
+        Q_EMIT viewSwitchUp();
+    });
+
+    connect(settingView,&settingview::viewSwitchDown,this,[=](){
+       m_Button->setFocus();
+       settingView->clearSelection();
     });
 
 
@@ -92,7 +118,38 @@ bool SettingWidget::eventFilter(QObject *watched, QEvent *event){
     return false;
 }
 
+void SettingWidget::selectLastRow(){
+    if(m_Button->isVisible()){
+        m_Button->setFocus();
+    }else{
+        settingView->setFocus();
+        settingView->setCurrentIndex(lastVisibleItem(settingView));
+    }
+}
+
+QModelIndex SettingWidget::lastVisibleItem(settingview *view, const QModelIndex &index )
+{
+    QAbstractItemModel *model = view->model();
+    int rowCount = model->rowCount(index);
+    if (rowCount> 0) {
+        //Find the last item in this level of hierarchy.
+        QModelIndex lastIndex = model->index(rowCount - 1, 0, index);
+        if (model->hasChildren(lastIndex) && view->isExpanded(lastIndex)) {
+            //There is even deeper hierarchy. Drill down with recursion.
+            return lastVisibleItem(view, lastIndex);
+        } else {
+            //Test the last item in the tree.
+            return lastIndex;
+        }
+    } else {
+        return QModelIndex();
+    }
+}
+
+
 void SettingWidget::fristSelect(){
-    QTimer::singleShot(100,[this] {settingView->setCurrentIndex(m_settingmodel->index(0));});
+    QTimer::singleShot(100,[this] {
+        settingView->setFocus();
+        settingView->setCurrentIndex(m_settingmodel->index(0));});
 
 }

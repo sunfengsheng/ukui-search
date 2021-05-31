@@ -5,8 +5,11 @@
 #include "../Style/style.h"
 #include <QDebug>
 #include <QListView>
+#include <QKeyEvent>
+
 class settingview : public QTreeView
 {
+    Q_OBJECT
 public:
     settingview();
     ~settingview();
@@ -20,6 +23,15 @@ private:
     //用来判断style
     QStringList stylelist;
     void styleChange();
+
+protected:
+    void keyPressEvent(QKeyEvent *event);
+
+Q_SIGNALS:
+    void open();
+    void viewSwitchDown();
+    void viewSwitchUp();
+
 
 };
 

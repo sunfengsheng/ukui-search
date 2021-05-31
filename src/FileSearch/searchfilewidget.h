@@ -23,13 +23,18 @@ public:
      filemodel *m_filemodel;//文件model
      QVBoxLayout *m_listLayout;
      SearchFileThread *m_searchFileThread=nullptr;
+     MoreButton *m_Morebutton;
+
+public:
+     void selectLastRow();
+
 private:
      void initFilesearchUI();
      void paintEvent(QPaintEvent *e);
      bool eventFilter(QObject *watched, QEvent *event);
+     QModelIndex lastVisibleItem(fileview *view, const QModelIndex &index = QModelIndex());
 
 private:
-     MoreButton *m_Morebutton;
      HeadLabel *m_fileHead;
 
 private Q_SLOTS:
@@ -39,6 +44,7 @@ private Q_SLOTS:
 Q_SIGNALS:
      void sendSearchKeyword(QString arg);
      void fileWidgetHide();
+     void viewSwitchDown();
 
 
 };

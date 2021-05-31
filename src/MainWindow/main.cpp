@@ -121,7 +121,7 @@ int main(int argc, char *argv[])
     //注册MessageHandler
     QFile outFile(qgetenv("HOME") +"/.config/ukui/ukui-search.log");
     outFile.remove();
-    qInstallMessageHandler(outputMessage);
+//    qInstallMessageHandler(outputMessage);
 
     return app.exec();
 }

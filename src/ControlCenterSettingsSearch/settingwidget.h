@@ -27,6 +27,7 @@ private:
      void initSettingsearchUI();
      void paintEvent(QPaintEvent *e);
      bool eventFilter(QObject *watched, QEvent *event);
+     QModelIndex lastVisibleItem(settingview *view, const QModelIndex &index = QModelIndex());
 
 private:
      MoreButton *m_Button;
@@ -38,9 +39,12 @@ private Q_SLOTS:
 
 public Q_SLOTS:
      void fristSelect();
+     void selectLastRow();
 
 Q_SIGNALS:
 //     void sendSearchKeyword(QString arg);
+     void viewSwitchDown();
+     void viewSwitchUp();
 
 
 };

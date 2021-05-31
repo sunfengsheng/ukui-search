@@ -24,3 +24,16 @@ void MoreButton::InitUi(){
 void MoreButton::setText(QString text){
     m_Textlabel->setText(text);
 }
+
+void MoreButton::keyPressEvent(QKeyEvent *event){
+    if(event->text()=="\r"){
+        Q_EMIT open();
+    }
+    if(event->key()==Qt::Key_Down){
+        Q_EMIT switchDownModule();
+    }
+    if(event->key()==Qt::Key_Up){
+        Q_EMIT switchUpModule();
+    }
+    QPushButton::keyPressEvent(event);
+}

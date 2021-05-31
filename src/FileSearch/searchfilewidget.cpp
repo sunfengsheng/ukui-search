@@ -20,7 +20,6 @@ void SearchFileWidget::initFilesearchUI()
     m_fileHead->setText(tr("File"));
     m_fileHead->setAttribute(Qt::WA_TranslucentBackground);//"透明背景"
 
-
     m_Morebutton=new MoreButton(this);
     m_Morebutton->setText("查看更多");
 
@@ -37,6 +36,20 @@ void SearchFileWidget::initFilesearchUI()
         m_filemodel->run(5,5);
     });
 
+    connect(m_Morebutton,&MoreButton::open,this,[=](){
+        m_filemodel->run(5,5);
+    });
+
+    connect(m_Morebutton,&MoreButton::switchUpModule,this,[=](){
+        fileView->setCurrentIndex(m_filemodel->index(2,0,m_filemodel->index(0,0,m_filemodel->index(0))));
+    });
+
+    connect(m_Morebutton,&MoreButton::switchDownModule,this,[=](){
+        Q_EMIT viewSwitchDown();
+    });
+
+
+
     //创建文件搜索线程
     m_searchFileThread=new SearchFileThread;
 
@@ -48,8 +61,22 @@ void SearchFileWidget::initFilesearchUI()
 
 
     //监听点击事件，打开对应的文件
+    connect(fileView,&fileview::open,this,[=](){
+        m_filemodel->run(fileView->currentIndex().row(),fileView->currentIndex().column());
+    });
+
     connect(fileView,&QTreeView::clicked,this,[=](){
         m_filemodel->run(fileView->currentIndex().row(),fileView->currentIndex().column());
+    });
+
+    //上下键切换监听
+    connect(fileView,&fileview::viewSwitchDown,this,[=](){
+       m_Morebutton->setFocus();
+       fileView->clearSelection();
+    });
+    connect(fileView,&fileview::viewNoMoreSwitchDown,this,[=](){
+       fileView->clearSelection();
+       Q_EMIT viewSwitchDown();
     });
 
     //监听输入框的改变，刷新界面
@@ -97,6 +124,7 @@ void SearchFileWidget::recvFileSearchResult(QStringList arg)
     //根据数据的大小隐藏或显示
     if(arg.count()>0) {
         this->setVisible(true);
+        fileView->setFocus(Qt::TabFocusReason);
     } else {
         this->setVisible(false);
         Q_EMIT fileWidgetHide();
@@ -115,6 +143,35 @@ void SearchFileWidget::paintEvent(QPaintEvent *e)
     p.drawRoundedRect(rect,12,12);
     QWidget::paintEvent(e);
 }
+
+void SearchFileWidget::selectLastRow(){
+    if(m_Morebutton->isVisible()){
+        m_Morebutton->setFocus();
+    }else{
+        fileView->setFocus();
+        fileView->setCurrentIndex(lastVisibleItem(fileView));
+    }
+}
+
+QModelIndex SearchFileWidget::lastVisibleItem(fileview *view, const QModelIndex &index )
+{
+    QAbstractItemModel *model = view->model();
+    int rowCount = model->rowCount(index);
+    if (rowCount> 0) {
+        //Find the last item in this level of hierarchy.
+        QModelIndex lastIndex = model->index(rowCount - 1, 0, index);
+        if (model->hasChildren(lastIndex) && view->isExpanded(lastIndex)) {
+            //There is even deeper hierarchy. Drill down with recursion.
+            return lastVisibleItem(view, lastIndex);
+        } else {
+            //Test the last item in the tree.
+            return lastIndex;
+        }
+    } else {
+        return QModelIndex();
+    }
+}
+
 
 bool SearchFileWidget::eventFilter(QObject *watched, QEvent *event){
     if(watched==this){

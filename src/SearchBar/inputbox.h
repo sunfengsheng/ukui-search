@@ -39,18 +39,20 @@ private:
 
 class UkuiSearchBarHLayout : public QHBoxLayout
 {
+    Q_OBJECT
 public:
     UkuiSearchBarHLayout();
     ~UkuiSearchBarHLayout();
     void searchContent(QString searchcontent);
+
+public:
+    UKuiSearchLineEdit *m_queryLineEdit=nullptr;
+
 private:
     void initUI();
     void retouchLineEdit();
-
-//    QLabel *m_queryIcon=nullptr;
-//    QLabel *m_queryText=nullptr;
-//    QLineEdit *m_queryLineEdit=nullptr;
-    UKuiSearchLineEdit *m_queryLineEdit=nullptr;
+protected:
+    bool event(QEvent *event);
 
 };
 class UkuiSearchBarWidgetLayout : public QHBoxLayout
